@@ -9,8 +9,11 @@ load_dotenv()
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 JINA_API_KEY = os.environ.get("JINA_API_KEY")
 
+#GUARD MODELS
+GUARD_MODEL_NAME = "openai/gpt-oss-safeguard-20b"  # Example guard model name
+
 #TRACING
-LANGSMITH_TRACING = os.environ.get("LANGSMITH_TRACING")
+LANGSMITH_TRACING = os.environ.get("LANGSMITH_TRACING", "false")  # Default to 'false' if not set
 LANGSMITH_ENDPOINT = os.environ.get("LANGSMITH_ENDPOINT")
 LANGSMITH_API_KEY = os.environ.get("LANGSMITH_API_KEY")
 LANGSMITH_PROJECT = os.environ.get("LANGSMITH_PROJECT")
