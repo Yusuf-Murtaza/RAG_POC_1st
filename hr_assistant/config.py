@@ -9,6 +9,12 @@ load_dotenv()
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 JINA_API_KEY = os.environ.get("JINA_API_KEY")
 
+#TRACING
+LANGSMITH_TRACING = os.environ.get("LANGSMITH_TRACING")
+LANGSMITH_ENDPOINT = os.environ.get("LANGSMITH_ENDPOINT")
+LANGSMITH_API_KEY = os.environ.get("LANGSMITH_API_KEY")
+LANGSMITH_PROJECT = os.environ.get("LANGSMITH_PROJECT")
+
 #Define path data/ Vectorstore
 
 DATA_FILE_PATH = os.path.join('data', 'hr_policy.txt')

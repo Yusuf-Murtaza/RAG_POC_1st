@@ -15,13 +15,19 @@ from hr_assistant.vector_store import (
     vector_store_exists,
     get_retriever
 )
+from hr_assistant.logger import get_logger
+from hr_assistant.tracing import check_langsmith_tracing
+
+logger = get_logger(__name__)
 
 def build_vector_store_for_document(file_path: str = config.DATA_FILE_PATH):
     """Load + Save + Embed the given document, reusing the saved index if we have one"""
     if vector_store_exists():   
         print("Vector store already exists. Loading existing vector store...")
+        logger.info("Vector store already exists. Loading existing vector store...")
         return load_vector_store()
     print("No Vector store found.. Building one from scratch..")
+    logger.info("No Vector store found.. Building one from scratch..")
     documents = load_documents(file_path)
     chunks = split_into_chunks(documents)
     print(f"Loaded '{file_path}' and spint it into {len(chunks)} chunks")
@@ -33,17 +39,21 @@ def build_vector_store_for_document(file_path: str = config.DATA_FILE_PATH):
 
 def build_hr_assistant(file_path: str = config.DATA_FILE_PATH):
     """Build the full RAG agent, ready to answer questions"""
+    logger.info("Building HR assistant agent...")
     config.check_api_keys()
+    check_langsmith_tracing()
     vector_store = build_vector_store_for_document(file_path)
     retriever = get_retriever(vector_store)
     search_tool = create_search_tool(retriever)
     llm = get_llm()
     agent = create_hr_agent(llm,[search_tool])
+    logger.info("HR assistant agent built and ready to answer questions.")
     return agent
 
 
 def ask(agent, question: str) -> str:
     """Ask the agent and returns its final answer as plain text"""
+    logger.info(f"User question: {question}")
     response = agent.invoke(
         {
             "messages":[
@@ -54,5 +64,7 @@ def ask(agent, question: str) -> str:
             ]
         }
     )
-    return response["messages"][-1].content
+    answer = response["messages"][-1].content
+    logger.info(f"Final answer: {answer}")
+    return answer
 

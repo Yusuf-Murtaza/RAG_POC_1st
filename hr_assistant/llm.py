@@ -2,9 +2,13 @@
 
 from langchain_openrouter import ChatOpenRouter
 from hr_assistant import config
+from hr_assistant.logger import get_logger
 
-def get_llm(model_name: str = config.LLM_MODEL_NAME):
+logger = get_logger(__name__)
+
+def get_llm():
     """Return the OpenRouter LLM model. Reads OPENROUTER_API_KEY from environment variables."""
+    logger.info(f"Loading LLM model: {config.LLM_MODEL_NAME}")
     return ChatOpenRouter(
         model_name=config.LLM_MODEL_NAME, 
         max_tokens=2048,
